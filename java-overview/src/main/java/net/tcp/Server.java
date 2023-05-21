@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
  * @since 2023/3/25
  */
 public class Server {
-    private static Logger LOGGER = Logger.getLogger("Server");
+    private static final Logger LOGGER = Logger.getLogger("Server");
     public static void main(String[] args) throws IOException {
         ServerSocket ss = new ServerSocket(8888);
         LOGGER.info("Server Starting");

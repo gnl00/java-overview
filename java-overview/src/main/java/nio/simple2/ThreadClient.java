@@ -1,4 +1,4 @@
-package netty.simple2;
+package nio.simple2;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,7 +15,7 @@ import java.util.Set;
  * @author gnl
  * @since 2023/4/4
  */
-public class SimpleClient2 {
+public class ThreadClient {
     public static void main(String[] args) throws IOException {
         SocketChannel clientChannel = SocketChannel.open();
         clientChannel.configureBlocking(false);
@@ -31,7 +31,9 @@ public class SimpleClient2 {
             // 开始轮询事件
             while (true) {
                 // 阻塞，直到有事件
-                selector.select();
+                if (selector.select() == 0) {
+                    continue;
+                }
                 Set<SelectionKey> keys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = keys.iterator();
                 while (iterator.hasNext()) {
@@ -44,7 +46,7 @@ public class SimpleClient2 {
                         if (clientChannel.finishConnect()) {
                             // 注册读事件
                             clientChannel.register(selector, SelectionKey.OP_READ);
-                            System.out.println("[notification] read event register success");
+                            System.out.println("[connectable] read event register success");
                             clientChannel.write(ByteBuffer.wrap("This is message from client".getBytes()));
                         }
                     }
@@ -55,12 +57,12 @@ public class SimpleClient2 {
                         // allocate buffer
                         ByteBuffer buffer = ByteBuffer.allocate(1024);
                         int len = channel.read(buffer);
-                        System.out.println("[notification] client receive byte length " + len);
+                        System.out.println("[readable] client receive byte length " + len);
 
                         byte[] readByte = new byte[len];
                         buffer.flip();
                         buffer.get(readByte);
-                        System.out.println("[notification] client receive " + new String(readByte));
+                        System.out.println("[readable] client receive " + new String(readByte));
                     }
                 }
             }

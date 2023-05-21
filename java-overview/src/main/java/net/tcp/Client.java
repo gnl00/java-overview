@@ -1,6 +1,12 @@
 package net.tcp;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -12,14 +18,15 @@ import java.util.logging.Logger;
  * @since 2023/3/25
  */
 public class Client {
-    private static Logger LOGGER = Logger.getLogger("Client");
+    private static final Logger LOGGER = Logger.getLogger("Client");
 
     public static void main(String[] args) throws IOException {
         Socket socket = new Socket("localhost", 8888);
-        try(InputStream is = socket.getInputStream()) {
-            try(OutputStream os = socket.getOutputStream()) {
-                handle(is, os);;
-            }
+        try(
+            InputStream is = socket.getInputStream();
+            OutputStream os = socket.getOutputStream();
+        ) {
+            handle(is, os);
         }
         socket.close();
         LOGGER.info("Client disconnected");

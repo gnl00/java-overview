@@ -1,9 +1,12 @@
-package netty.simple2;
+package nio.simple2;
 
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 /**
@@ -12,17 +15,17 @@ import java.util.Iterator;
  * @author gnl
  * @since 2023/4/4
  */
-public class Work implements Runnable {
+public class Worker implements Runnable {
 
-    private Thread thread;
+    private final Thread thread;
 
-    private ServerSocketChannel serverSocketChannel;
+    private final ServerSocketChannel serverSocketChannel;
 
-    private Selector selector = Selector.open();
+    private final Selector selector = Selector.open();
 
-    private SelectionKey selectionKey;
+    private final SelectionKey selectionKey;
 
-    public Work(ServerSocketChannel serverSocketChannel) throws IOException {
+    public Worker(ServerSocketChannel serverSocketChannel) throws IOException {
         this.serverSocketChannel = serverSocketChannel;
         serverSocketChannel.configureBlocking(false);
         this.selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -35,10 +38,12 @@ public class Work implements Runnable {
 
     @Override
     public void run() {
-        while (true) { // 新线程阻塞
+        while (true) {
             try {
-                System.out.println("[work] blocking");
-                selector.select();
+                System.out.println("[worker] blocking");
+                if (selector.select() == 0) {
+                    continue;
+                }
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();
@@ -53,8 +58,9 @@ public class Work implements Runnable {
                         socketChannel.configureBlocking(false);
                         // 注册到 selector
                         socketChannel.register(selector, SelectionKey.OP_READ);
+                        System.out.println("[acceptable] client connected");
+
                         socketChannel.write(ByteBuffer.wrap("server response for the first connection".getBytes()));
-                        System.out.println("[notification] client connected");
                     }
 
                     // 可读事件
@@ -64,13 +70,13 @@ public class Work implements Runnable {
                         int len = channel.read(buffer);
                         if (len == -1) {
                             channel.close();
-                            System.out.println("[notification] client disconnected");
+                            System.out.println("[readable] client disconnected");
                             break;
                         }
                         byte[] bytes = new byte[len];
                         buffer.flip();
                         buffer.get(bytes);
-                        System.out.println("[notification] client disconnected");
+                        System.out.println("[readable] client disconnected");
                     }
                 }
 
