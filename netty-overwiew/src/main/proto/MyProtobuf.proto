@@ -1,0 +1,47 @@
+// 为何需要？
+// Netty 本身自带的 ObjectDecoder 和 ObjectEncoder 可以用来实现 POJO 对象或各种业务对象的编码和解码，
+// 底层使用的仍是Java序列化技术,而Java序列化技术本身效率就不高
+// 无法跨语言
+// 序列化后的体积太大
+// 序列化性能太低
+
+// https://protobuf.dev/programming-guides/proto3/
+// Protobuf 是 Google 发布的开源项目，全称 Google Protocol Buffers
+// 是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化。
+// 使用 protobuf 编译器能自动生成代码，Protobuf 是将类的定义使用 .proto 文件进行描述
+
+// macOS
+// brew install protobuf
+// protoc <command>
+
+// Protobuf 是以 message 的方式来管理数据的
+
+syntax = "proto3";
+option optimize_for = SPEED; // 加快解析
+option java_package = "com.demo.codec"; // 指定将生成的代码保存到哪个包下
+option java_outer_classname = "MyProtobuf"; // 外部类名，生成的文件名
+
+message MyData {
+  enum DataType {
+    StudentType = 0; // proto3 要求 enum 从 0 开始
+    WorkerType = 1;
+  }
+
+    DataType dataType = 1; // 标识传的是哪一个枚举类型
+
+  // 表示枚举类型每次只能出现其中的一个
+  oneof dataBody {
+    Student student = 2;
+    Worker worker = 3;
+  }
+}
+
+message Student {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Worker {
+  int32 name = 1;
+  int32 age = 2;
+}
