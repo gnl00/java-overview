@@ -1,5 +1,8 @@
 package com.demo.sticky_split;
 
+import com.demo.sticky_split.codec.MessageProtocolDecoder;
+import com.demo.sticky_split.codec.MessageProtocolEncoder;
+import com.demo.sticky_split.split.SplitServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -14,10 +17,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  * @author gnl
  * @since 2023/5/23
  */
-public class StickyServer {
+public class SServer {
     private final int port;
 
-    public StickyServer(int port) {
+    public SServer(int port) {
         this.port = port;
     }
 
@@ -34,7 +37,11 @@ public class StickyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new StickyServerHandler());
+                            ch.pipeline()
+                                    //.addLast(new StickyServerHandler());
+                                    .addLast(new MessageProtocolEncoder())
+                                    .addLast(new MessageProtocolDecoder())
+                                    .addLast(new SplitServerHandler());
                         }
                     });
 
@@ -50,6 +57,6 @@ public class StickyServer {
     }
 
     public static void main(String[] args) {
-        new StickyServer(6666).start();
+        new SServer(6666).start();
     }
 }

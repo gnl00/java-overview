@@ -19,6 +19,34 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.90.Final</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.23.1</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- https://mvnrepository.com/artifact/org.xolstice.maven.plugins/protobuf-maven-plugin -->
+            <plugin>
+                <!-- 可手动执行 protobuf:compile 生成代码 -->
+                <!-- 默认生成路径为 target/generated-sources  -->
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

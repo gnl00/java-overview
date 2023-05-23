@@ -1,4 +1,4 @@
-package com.demo.sticky_split;
+package com.demo.sticky_split.sticky;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

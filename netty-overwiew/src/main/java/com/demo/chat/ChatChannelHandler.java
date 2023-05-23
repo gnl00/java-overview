@@ -1,4 +1,4 @@
-package com.demo.chat.group;
+package com.demo.chat;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -1,4 +1,4 @@
-package com.demo.sticky_split.sticky;
+package com.demo.sticky_split.split;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -7,29 +7,36 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.CharsetUtil;
 
 /**
- * StickyClientHandler
+ * SplitClientHandler
  *
  * @author gnl
  * @since 2023/5/23
  */
-public class StickyClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class SplitClientHandler extends SimpleChannelInboundHandler<MessageProtocol> {
     private int count;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         for (int i = 0; i < 10; i++) {
-            ByteBuf buffer = Unpooled.copiedBuffer("hello, this is client\n", CharsetUtil.UTF_8);
-            ctx.writeAndFlush(buffer);
+            String contentStr = "hello, this is client\n";
+            MessageProtocol msg = new MessageProtocol();
+            byte[] content = contentStr.getBytes(CharsetUtil.UTF_8);
+            msg.setContent(content);
+            msg.setLen(content.length);
+
+            ctx.writeAndFlush(msg);
         }
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-        byte[] buffer = new byte[msg.readableBytes()];
+    protected void channelRead0(ChannelHandlerContext ctx, MessageProtocol msg) throws Exception {
+        int len = msg.getLen();
+        byte[] buffer = msg.getContent();
 
-        msg.readBytes(buffer);
+        System.out.println("[CLIENT] received: ");
+        System.out.println("len: " + len);
         String str = new String(buffer, CharsetUtil.UTF_8);
-        System.out.println("[client] received: " + str);
+        System.out.println("content: " + str);
         System.out.println(this.count++);
     }
 

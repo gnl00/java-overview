@@ -1,5 +1,8 @@
 package com.demo.sticky_split;
 
+import com.demo.sticky_split.codec.MessageProtocolDecoder;
+import com.demo.sticky_split.codec.MessageProtocolEncoder;
+import com.demo.sticky_split.split.SplitClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -15,11 +18,11 @@ import java.net.InetSocketAddress;
  * @author gnl
  * @since 2023/5/23
  */
-public class StickyClient {
+public class SClient {
     private final String host;
     private final int port;
 
-    public StickyClient(String host, int port) {
+    public SClient(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -35,7 +38,11 @@ public class StickyClient {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new StickyClientHandler());
+                            ch.pipeline()
+                                    // .addLast(new StickyClientHandler());
+                                    .addLast(new MessageProtocolEncoder())
+                                    .addLast(new MessageProtocolDecoder())
+                                    .addLast(new SplitClientHandler());
                         }
                     });
 
@@ -50,6 +57,6 @@ public class StickyClient {
     }
 
     public static void main(String[] args) {
-        new StickyClient("localhost", 6666).start();
+        new SClient("localhost", 6666).start();
     }
 }

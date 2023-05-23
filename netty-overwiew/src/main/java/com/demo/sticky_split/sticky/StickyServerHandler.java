@@ -1,4 +1,4 @@
-package com.demo.sticky_split;
+package com.demo.sticky_split.sticky;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -9,7 +9,7 @@ import io.netty.util.CharsetUtil;
 import java.util.UUID;
 
 /**
- * TODO
+ * StickyServerHandler
  *
  * @author gnl
  * @since 2023/5/23

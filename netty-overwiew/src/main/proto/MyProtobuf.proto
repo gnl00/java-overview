@@ -18,30 +18,23 @@
 
 syntax = "proto3";
 option optimize_for = SPEED; // 加快解析
-option java_package = "com.demo.codec"; // 指定将生成的代码保存到哪个包下
+package com.demo.protobuf; // 命名空间，生成的类全限定类名为 com.demo.protobuf.XXX
+option java_package = "com.demo.protobuf"; // 编译生成的 Java 文件所存放的目录
 option java_outer_classname = "MyProtobuf"; // 外部类名，生成的文件名
+// 默认以内部类形式升成，指定为 false 生成多个文件，而不是内部类
+// option java_multiple_files = true;
 
-message MyData {
-  enum DataType {
-    StudentType = 0; // proto3 要求 enum 从 0 开始
-    WorkerType = 1;
-  }
-
-    DataType dataType = 1; // 标识传的是哪一个枚举类型
-
-  // 表示枚举类型每次只能出现其中的一个
-  oneof dataBody {
-    Student student = 2;
-    Worker worker = 3;
-  }
+service IService { // 定义一个接口 IService
+  // 接口中定义一个方法，名为 SayHello，参数 Request，返回 Response
+  rpc SayHello(Request) returns (Response) {}
 }
 
-message Student {
+message Request {
   int32 id = 1;
-  string name = 2;
+  string body = 2;
 }
 
-message Worker {
-  int32 name = 1;
-  int32 age = 2;
+message Response {
+  int32 code = 1;
+  string body = 2;
 }
