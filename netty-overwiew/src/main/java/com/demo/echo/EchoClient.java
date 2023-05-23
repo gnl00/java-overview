@@ -38,7 +38,7 @@ public class EchoClient {
                             ch.pipeline().addLast(new EchoClientChannelHandler());
                         }
                     });
-
+            b.bind();
             ChannelFuture future = b.connect().sync();
             System.out.println("echo client started");
 

@@ -40,8 +40,8 @@ public class DiscardServer {
                             ch.pipeline().addLast(new DiscardChannelHandler());
                         }
                     })
-                    .option(ChannelOption.SO_BACKLOG, 128) // Allow to specify a ChannelOption which is used for the Channel instances once they got created
-                    .childOption(ChannelOption.SO_KEEPALIVE, true); // Allow to specify a ChannelOption which is used for the Channel instances once they get created (after the acceptor accepted the Channel)
+                    .option(ChannelOption.SO_BACKLOG, 128) // 设置线程队列得到连接个数
+                    .childOption(ChannelOption.SO_KEEPALIVE, true); // 设置保持活动连接状态
             ChannelFuture future = bootstrap.bind(port).sync();
 
             System.out.println("port: " + port + " is starting");

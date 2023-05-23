@@ -41,6 +41,7 @@ public class EchoServer {
             ChannelFuture future = server.bind(port).sync();
             System.out.println("server started, listen on port " + port);
 
+            // 对关闭 Channel 进行监听
             future.channel().closeFuture().sync(); // 阻塞直到 future 关闭
 
         } catch (Exception e) {
