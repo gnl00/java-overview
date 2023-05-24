@@ -28,8 +28,8 @@ public class EchoClient {
     public void start() {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            Bootstrap b = new Bootstrap();
-            b.group(workerGroup)
+            Bootstrap b = new Bootstrap()
+                    .group(workerGroup)
                     .channel(NioSocketChannel.class)
                     .remoteAddress(new InetSocketAddress(host, port))
                     .handler(new ChannelInitializer<SocketChannel>() {

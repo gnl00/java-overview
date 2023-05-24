@@ -17,6 +17,7 @@ public class MessageProtocolDecoder extends ReplayingDecoder<MessageProtocol> {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         // ByteBuf to MessageProtocol
+        System.out.println("decode MessageProtocol");
         int len = in.readInt();
         byte[] buf = new byte[len];
 

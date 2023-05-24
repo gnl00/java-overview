@@ -25,8 +25,8 @@ public class EchoServer {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         try {
-            ServerBootstrap server = new ServerBootstrap();
-            server.group(boss, worker)
+            ServerBootstrap server = new ServerBootstrap()
+                    .group(boss, worker)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
