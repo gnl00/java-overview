@@ -4,10 +4,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 /**
- * TODO
- *
- * @author gnl
- * @since 2023/3/27
+ * 集齐 7 颗龙珠
  */
 public class CyclicBarrierTest {
     public static void main(String[] args) {

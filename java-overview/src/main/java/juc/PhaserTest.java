@@ -5,10 +5,7 @@ import java.util.List;
 import java.util.concurrent.Phaser;
 
 /**
- * TODO
- *
- * @author gnl
- * @since 2023/3/28
+ * 分段锁，所有线程一起到达某一个阶段之后才能继续下一步
  */
 public class PhaserTest {
     public static void main(String[] args) {

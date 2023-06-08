@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO
+ * 创建一个有指定容量的 LRU 缓存
  *
  * @author gnl
  * @since 2023/3/6

@@ -3,10 +3,7 @@ package juc;
 import java.util.concurrent.locks.StampedLock;
 
 /**
- * TODO
- *
- * @author gnl
- * @since 2023/2/8 下午1:51
+ * 带邮戳版本号的乐观锁
  */
 public class StampedLockTest {
 
