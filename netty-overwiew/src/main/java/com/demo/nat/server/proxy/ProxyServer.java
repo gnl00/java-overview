@@ -1,4 +1,4 @@
-package com.demo.echo;
+package com.demo.nat.server.proxy;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -10,52 +10,46 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
 
 /**
- * EchoServer
- *
- * @author gnl
- * @since 2023/5/21
+ * ProxyServer
  */
-public class EchoServer {
-    private final int port;
+public class ProxyServer {
 
-    public EchoServer(int port) {
+    private final int port;
+    private final int mappingPort;
+
+    public ProxyServer(int port, int mappingPort) {
         this.port = port;
+        this.mappingPort = mappingPort;
     }
 
-    public void start() {
+    public void start () {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
         try {
-            ServerBootstrap server = new ServerBootstrap()
-                    .group(boss, worker)
+            ServerBootstrap b = new ServerBootstrap().group(boss, worker)
                     .handler(new LoggingHandler())
+
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new EchoServerChannelHandler());
+                            ch.pipeline().addLast(new ProxyServerChannelHandler());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            // start
-            ChannelFuture future = server.bind(port).sync();
-            System.out.println("server started, listen on port " + port);
-
-            // 对关闭 Channel 进行监听
-            future.channel().closeFuture().sync(); // 阻塞直到 future 关闭
-
-        } catch (Exception e) {
+            ChannelFuture future = b.bind(port).sync();
+            future.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
-
     }
 
     public static void main(String[] args) {
-        new EchoServer(8080).start();
+        new ProxyServer(3307, 3306).start();
     }
 }
