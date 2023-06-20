@@ -1,5 +1,7 @@
-package com.demo.nat.server.proxy;
+package com.demo.proxy.proxy;
 
+import com.demo.proxy.codec.FrameDecoder;
+import com.demo.proxy.codec.FrameEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -7,6 +9,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LoggingHandler;
 
 /**
@@ -15,11 +19,9 @@ import io.netty.handler.logging.LoggingHandler;
 public class ProxyServer {
 
     private final int port;
-    private final int mappingPort;
 
-    public ProxyServer(int port, int mappingPort) {
+    public ProxyServer(int port) {
         this.port = port;
-        this.mappingPort = mappingPort;
     }
 
     public void start () {
@@ -33,7 +35,12 @@ public class ProxyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ProxyServerChannelHandler());
+                            ch.pipeline()
+                                    .addLast(new StringEncoder())
+                                    .addLast(new StringDecoder())
+                                    .addLast(new FrameDecoder())
+                                    .addLast(new FrameEncoder())
+                                    .addLast(new ProxyServerChannelHandler());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
@@ -50,6 +57,6 @@ public class ProxyServer {
     }
 
     public static void main(String[] args) {
-        new ProxyServer(3307, 3306).start();
+        new ProxyServer(3307).start();
     }
 }

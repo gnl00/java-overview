@@ -33,7 +33,11 @@ public class EchoServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new EchoServerChannelHandler());
+
+                            ch.pipeline()
+                                     // .addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(ClassLoader.getSystemClassLoader())))
+                                     // .addLast(new ObjectEncoder())
+                                    .addLast(new EchoServerChannelHandler());
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
