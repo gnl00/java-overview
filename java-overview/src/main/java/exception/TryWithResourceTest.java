@@ -4,12 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-/**
- * TODO
- *
- * @author gnl
- * @since 2023/2/20
- */
 public class TryWithResourceTest {
     public static void main(String[] args) {
         File file = new File("./test.txt");

@@ -1,11 +1,5 @@
 package exception;
 
-/**
- * TODO
- *
- * @author gnl
- * @since 2023/2/20
- */
 public class TryCatchTest {
     public static void main(String[] args) {
         try {
