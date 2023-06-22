@@ -1,4 +1,4 @@
-package com.demo.proxy.proxy;
+package com.demo.proxy;
 
 public class ForwardConfig {
     private final String host;
