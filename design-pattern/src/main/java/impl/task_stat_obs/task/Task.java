@@ -1,6 +1,5 @@
 package impl.task_stat_obs.task;
 
-import impl.task_stat_obs.action.Action;
 import impl.task_stat_obs.observer.IObserver;
 
 import java.util.HashMap;
